@@ -172,8 +172,8 @@ module.exports = (logSources, printer) => {
 		// Remove drainedLogSources from sources left to check
 		let indexDrainedSourceInMaster;
 		for (let f = 0; f < drainedLogSources.length; f++){
-				indexDrainedSourceInMaster = indexesOfRemainingLogSources.indexOf(drainedLogSources[f]);
-		    indexesOfRemainingLogSources.splice(indexDrainedSourceInMaster, 1);
+			indexDrainedSourceInMaster = indexesOfRemainingLogSources.indexOf(drainedLogSources[f]);
+			indexesOfRemainingLogSources.splice(indexDrainedSourceInMaster, 1);
 		}
 
 		//Sort entire list after row added
