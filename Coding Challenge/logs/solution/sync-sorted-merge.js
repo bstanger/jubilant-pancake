@@ -2,9 +2,77 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// MERGE SORT BY ROW
+// BINARY SORT
 ////////////////////////////////////////////////////////////////////////////////
 
+module.exports = (logSources, printer) => {
+	let sortingHelperList = [];
+
+	// Create "sortingHelperList" of lowest of logSources
+	for (let i = 0; i < logSources.length; i++){
+		logSources[i].last["logSourceIndex"] = i; // add index to "last" object
+		sortingHelperList.push(logSources[i].last); // push "last" object to sortingHelperList
+	}
+
+	// Sort "sortingHelperList"
+	sortingHelperList.sort(function(a, b){ return a.date - b.date });
+
+	let currentLogSourceIndex;
+	let currentLogSource;
+	let newLog;
+	let lowestOfSortingHelper;
+
+	while(sortingHelperList.length){
+		lowestOfSortingHelper = sortingHelperList[0];
+		currentLogSourceIndex = lowestOfSortingHelper.logSourceIndex; // Store index of lowest
+		printer.print(lowestOfSortingHelper); // Print lowest
+		sortingHelperList.splice(0,1); // Delete lowest
+
+		currentLogSource = logSources[currentLogSourceIndex]; // Focus on log source with same index as lowest value
+
+		if(currentLogSource.pop()){
+
+			// Create new object of "last" and add index
+			newLog = currentLogSource.last;
+			newLog["logSourceIndex"] = currentLogSourceIndex;
+
+			/* Function that returns index of where to insert "newLog" in "sortingHelperList"
+			using a binary search */
+			let binarySearch = newLog => {
+				let minIndex = 0;
+				let maxIndex = sortingHelperList.length - 1;
+				let comparisonIndex;
+				let comparisonValue;
+
+				while(minIndex <= maxIndex){
+					comparisonIndex = (minIndex + maxIndex) / 2 | 0;
+					comparisonValue = sortingHelperList[comparisonIndex];
+
+					if(comparisonValue.date < newLog.date){
+						minIndex = comparisonIndex + 1;
+					} else if (comparisonValue.date > newLog.date){
+						maxIndex = comparisonIndex - 1;
+					}
+				}
+
+				return minIndex;
+			}
+
+			// Insert "newLog" in correct location in "sortingHelperList"
+			sortingHelperList.splice(binarySearch(newLog), 0, newLog);
+		}
+	}
+
+	// Measure efficiency
+	printer.done();
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// MERGE SORT BY ROW
+////////////////////////////////////////////////////////////////////////////////
+/*
 module.exports = (logSources, printer) => {
 	let helperList = [];
 	let drainedCt = 0;
@@ -37,6 +105,7 @@ module.exports = (logSources, printer) => {
 	// Measure efficiency
 	printer.done()
 }
+*/
 
 
 ////////////////////////////////////////////////////////////////////////////////
